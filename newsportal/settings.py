@@ -27,7 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -37,6 +36,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis', 
+    'rest_framework',      
+    'constance',           
+    'constance.backends.database',  
+    'django_summernote',   
+    'news',                
+    'places',        
 ]
 
 MIDDLEWARE = [
@@ -75,8 +81,12 @@ WSGI_APPLICATION = 'newsportal.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'newsportal',
+        'USER': 'admin',
+        'PASSWORD': 'password',
+        'HOST': 'db', 
+        'PORT': '5432',
     }
 }
 
@@ -116,8 +126,31 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CONSTANCE_CONFIG = {
+    'EMAIL_RECIPIENTS': ('', 'Email recipients (comma-separated)'),
+    'EMAIL_SUBJECT': ('News Update', 'Email subject'),
+    'EMAIL_MESSAGE': ('Check out the latest news!', 'Email message'),
+    'WEATHER_UPDATE_MINUTE': ('0', 'Weather update minute (0-59)'),
+}
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+GDAL_LIBRARY_PATH = '/lib/aarch64-linux-gnu/libgdal.so'
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+SUMMERNOTE_THEME = 'bs4'
