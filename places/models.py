@@ -11,7 +11,10 @@ class RemarkablePlace(models.Model):
 
     def __str__(self):
         return self.name
-
+    
+    class Meta:
+        verbose_name = 'Локация'
+        verbose_name_plural = 'Локации'
 
 class WeatherSummary(models.Model):
     place = models.ForeignKey(RemarkablePlace, on_delete=models.CASCADE)
@@ -23,4 +26,8 @@ class WeatherSummary(models.Model):
     wind_speed = models.FloatField()
 
     def __str__(self):
-        return f"Weather at {self.place.name} on {self.timestamp}"
+        return f"Погода в {self.place.name} на {self.timestamp}"
+    
+    class Meta:
+        verbose_name = 'Прогноз погоды'
+        verbose_name_plural = 'Прогнозы погоды'

@@ -33,14 +33,6 @@ RUN apt-get update && apt-get install -y \
     postgresql-13-postgis-3 
 
 RUN apt-get install -y libgdal-dev
-RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/pgdg-archive-keyring.gpg \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pgdg-archive-keyring.gpg] http://apt.postgresql.org/pub/repos/apt bookworm-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-
-# Update package lists with the new repository
-RUN apt-get update
-
-# Install PostGIS and PostgreSQL with PostGIS extension
-RUN apt-get install -y postgis postgresql-13-postgis-3
 RUN pip install GDAL==3.2.2.1
 
 # Install Python dependencies

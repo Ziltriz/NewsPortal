@@ -1,9 +1,8 @@
 services:
   # PostgreSQL Database
   db:
-    image: postgres:13
+    image: postgis/postgis:13-3.3-alpine  
     container_name: db
-    restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
@@ -14,6 +13,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - app_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
 
   # Redis for Celery
   redis:
@@ -29,8 +35,8 @@ services:
     build: .
     command: bash -c "celery -A newsportal worker --loglevel=info"
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -43,8 +49,8 @@ services:
     build: .
     command: bash -c "celery -A newsportal beat --loglevel=info"
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
       - CELERY_BROKER_URL=redis://redis:6379/0
@@ -56,14 +62,14 @@ services:
   web:
     build: .
     container_name: django_app
-    command: python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     ports:
       - "8000:8000"
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
     environment:
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}
       - CELERY_BROKER_URL=redis://redis:6379/0

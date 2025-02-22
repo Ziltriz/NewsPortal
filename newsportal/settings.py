@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',      
     'constance',           
     'constance.backends.database',  
-    'django_summernote',   
+    'django_summernote', 
+    'django_celery_beat',  
     'news',                
     'places',        
 ]
@@ -87,6 +88,9 @@ DATABASES = {
         'PASSWORD': 'password',
         'HOST': 'db', 
         'PORT': '5432',
+        'OPTIONS': {
+            'connect_timeout': 10, 
+        },
     }
 }
 
@@ -137,16 +141,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 CONSTANCE_CONFIG = {
-    'EMAIL_RECIPIENTS': ('', 'Email recipients (comma-separated)'),
-    'EMAIL_SUBJECT': ('News Update', 'Email subject'),
-    'EMAIL_MESSAGE': ('Check out the latest news!', 'Email message'),
-    'WEATHER_UPDATE_MINUTE': ('0', 'Weather update minute (0-59)'),
+    'Получатели': ('', 'Email получателей (через запятую)'),
+    'ТЕМА': ('Тема рассылки', 'Сообщение'),
+    'Содержание': ('У нас тут новости новые, заходи, смотри *Чмок*!', 'Сообщение'),
+    'Время обновления погоды': ('0', 'Время обновления (0-59)'),
 }
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 GDAL_LIBRARY_PATH = '/lib/aarch64-linux-gnu/libgdal.so'
 
 CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 
 
