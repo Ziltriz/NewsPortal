@@ -27,4 +27,5 @@ urlpatterns = [
     path('summernote/', include('django_summernote.urls')),
     path('api/', include(router.urls)),
     path('api/places/', include('places.urls')),
+    path('api/news/<int:pk>/', NewsViewSet.as_view({'get': 'retrieve'}), name='news_detail'),
 ]
