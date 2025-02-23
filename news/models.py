@@ -5,21 +5,23 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 import sys
 from django.utils import timezone
 from django.contrib.auth.models import User
-
+from django.urls import reverse
 
 class News(models.Model):
-    title = models.CharField(max_length=255)
-    main_image = models.ImageField(upload_to='news_images/')
-    preview_image = models.ImageField(editable=False, blank=True, null=True)
-    content = models.TextField()
-    publication_date = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, verbose_name='Заголовок новости')
+    main_image = models.ImageField(upload_to='news_images/', verbose_name='Главное изображение')
+    preview_image = models.ImageField(verbose_name='Превью-изображение', editable=False, blank=True, null=True)
+    content = models.TextField(verbose_name='Текст новости')
+    publication_date = models.DateTimeField(verbose_name='Дата публикации', default=timezone.now)
+    author = models.ForeignKey(User, verbose_name='Автор новости', on_delete=models.CASCADE)
 
 
     class Meta:
         verbose_name = 'Статья'
         verbose_name_plural = 'Статьи'
     
+    def get_absolute_url(self):
+        return reverse('news_detail', args=[str(self.id)])
     
     def save(self, *args, **kwargs):
         if not self.preview_image and self.main_image:
@@ -44,6 +46,5 @@ class News(models.Model):
         return self.title
 
     
-
     
 

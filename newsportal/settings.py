@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'constance',           
     'constance.backends.database',  
     'django_summernote', 
-    'django_celery_beat',  
+    'django_celery_beat',
+    'django_filters',  
     'news',                
     'places',        
 ]
@@ -94,6 +95,12 @@ DATABASES = {
     }
 }
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'awercool@yandex.by'
+EMAIL_HOST_PASSWORD = 'xhxywbnradqfhvxr'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -140,11 +147,24 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+}
+
+
+
 CONSTANCE_CONFIG = {
-    'Получатели': ('', 'Email получателей (через запятую)'),
-    'ТЕМА': ('Тема рассылки', 'Сообщение'),
+    'Список адресатов': ('', 'Email получателей (через запятую)'),
+    'Тема сообщения': ('Тема рассылки', 'Сообщение'),
     'Содержание': ('У нас тут новости новые, заходи, смотри *Чмок*!', 'Сообщение'),
-    'Время обновления погоды': ('0', 'Время обновления (0-59)'),
+    'Время отправки Часы': (9, 'Время отправки  часы (0-23)'),
+    'Время отправки Минуты ': (00, 'Время отправки  минуты (0-59)'),
 }
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
 GDAL_LIBRARY_PATH = '/lib/aarch64-linux-gnu/libgdal.so'

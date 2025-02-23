@@ -5,16 +5,16 @@ import random
 
 
 class RemarkablePlace(models.Model):
-    name = models.CharField(max_length=255)
-    location = gis_models.PointField()
-    rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(25)])
+    name = models.CharField(max_length=255, verbose_name='Название места')
+    location = gis_models.PointField(verbose_name='Гео-координаты места (точка)')
+    rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(25)],verbose_name='Рейтинг (от 0 до 25)')
 
     def __str__(self):
         return self.name
     
     class Meta:
-        verbose_name = 'Локация'
-        verbose_name_plural = 'Локации'
+        verbose_name = 'Примечательное места'
+        verbose_name_plural = 'Примечательные места'
 
 class WeatherSummary(models.Model):
     place = models.ForeignKey(RemarkablePlace, on_delete=models.CASCADE)
@@ -29,5 +29,5 @@ class WeatherSummary(models.Model):
         return f"Погода в {self.place.name} на {self.timestamp}"
     
     class Meta:
-        verbose_name = 'Прогноз погоды'
-        verbose_name_plural = 'Прогнозы погоды'
+        verbose_name = 'Сводка погоды'
+        verbose_name_plural = 'Сводки погоды'
