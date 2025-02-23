@@ -39,8 +39,11 @@ RUN pip install GDAL==3.2.2.1
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir
 
+
 # Copy project files
 COPY . /app
+
+RUN python manage.py collectstatic --noinput
 
 # Start the application
 CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000"]

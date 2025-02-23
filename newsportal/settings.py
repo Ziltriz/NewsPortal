@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from django.contrib.gis.db import models as geo_models
+from leaflet.forms.widgets import LeafletWidget
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +44,8 @@ INSTALLED_APPS = [
     'constance.backends.database',  
     'django_summernote', 
     'django_celery_beat',
-    'django_filters',  
+    'django_filters',
+    'leaflet',  
     'news',                
     'places',        
 ]
@@ -174,6 +177,32 @@ CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 
+LEAFLET_CONFIG = {
+    'PLUGINS': {
+        'forms': {
+            'auto-include': True
+        }
+    }
+}
+LEAFLET_WIDGET_ATTRS = {
+    'map_height': '500px',
+    'map_width': '100%',
+    'display_raw': 'true',
+    'map_srid': 4326,
+    'Attribution': '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+
+}
+
+LEAFLET_FIELD_OPTIONS = {'widget': LeafletWidget(attrs=LEAFLET_WIDGET_ATTRS)}
+
+FORMFIELD_OVERRIDES = {
+    geo_models.PointField: LEAFLET_FIELD_OPTIONS,
+    geo_models.MultiPointField: LEAFLET_FIELD_OPTIONS,
+    geo_models.LineStringField: LEAFLET_FIELD_OPTIONS,
+    geo_models.MultiLineStringField: LEAFLET_FIELD_OPTIONS,
+    geo_models.PolygonField: LEAFLET_FIELD_OPTIONS,
+    geo_models.MultiPolygonField: LEAFLET_FIELD_OPTIONS,
+}
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

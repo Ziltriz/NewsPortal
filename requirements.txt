@@ -10,3 +10,4 @@ xlsxwriter==3.0.*
 django-summernote==0.8.*
 psycopg2-binary==2.9.*
 django-celery-beat==2.7.0
+django-filter==23.1

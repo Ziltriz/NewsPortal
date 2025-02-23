@@ -25,5 +25,6 @@ router.register(r'news', NewsViewSet, basename='news')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('summernote/', include('django_summernote.urls')),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('api/places/', include('places.urls')),
 ]
